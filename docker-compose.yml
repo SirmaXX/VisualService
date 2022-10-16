@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  webapp:
+  webappp:
     container_name: webapp
-    image: webapp
+    image: webappp
     build: ./Webapp
     ports:
       - "5000:5000"
@@ -12,7 +12,7 @@ services:
 
   api:
     container_name: api
-    image: api
+    image: apii
     build: ./Api
     ports:
       - "5001:5001"
