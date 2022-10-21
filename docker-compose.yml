@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  webapp:
+    container_name: webappp
+    image: webappp
+    build: ./Webapp
+    ports:
+      - "5000:5000"
+    
+    
+
+  api:
+    container_name: apii
+    image: apii
+    build: ./Api
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    depends_on:
+      - db
+    
+  
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    #command: -p 5433
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
+
+
+

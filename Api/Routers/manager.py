@@ -51,6 +51,9 @@ async def get_user(req: Request,id:int, db: Session = Depends(get_db)):
 
 
 
+
+
+
 @managerroute.post("/img/add")
 async def upload_image(req: Request,db: Session = Depends(get_db),uploaded_file: UploadFile = File(...)):
       filextensions = ['image/png', 'image/jpg', 'image/jpeg']
@@ -65,6 +68,24 @@ async def upload_image(req: Request,db: Session = Depends(get_db),uploaded_file:
       else :
         return {"file_name":"imaj değil"}
   
+
+
+@managerroute.put("/img/update/{id}/{img_name}")
+async def update_image(req: Request,id:int,img_name:str,db: Session = Depends(get_db)):
+     file_location = f"../Img/" 
+     image = db.query(İmage).filter_by(id=id).first()
+     if image != None:
+        if os.path.isfile( file_location+img_name):
+          print("The file already exists")
+        else:
+         os.rename( file_location+image.img_name,file_location+img_name)
+         db.query(İmage).filter_by(id=id).update(dict(img_name=img_name))
+         db.commit()        
+     else :
+        return False    
+
+
+
 @managerroute.delete("/img/delete/{id}")
 async def remove_image(req: Request,id:int,db: Session = Depends(get_db)):
    image = db.query(İmage).filter_by(id=id).first()
@@ -79,23 +100,8 @@ async def remove_image(req: Request,id:int,db: Session = Depends(get_db)):
    else:    ## Show an error ##
       return {"file_name":"dosya silindi"}
   
-""" 
-@managerroute.delete("/img/delete/{id}")
-async def remove_image(req: Request,id:int,db: Session = Depends(get_db)):
-   image = db.query(İmage).filter_by(id=id).first()
-   if image != None:
-    if os.path.isfile("../Img/" +image.img_name):
-      os.remove("../Img/" +image.img_name)
-      db.delete(image)
-      db.commit()
-    else:    ## Show an error ##
-        print("dosya yoktur")
-    return {"file_name":"dosya silindi"}
-   else :
-        raise HTTPException(status_code=404,detail="resim yoktur")
-     
-   """
 
+  
 
 
 @managerroute.get("/video")
@@ -121,7 +127,7 @@ async def get_user(req: Request,id:int, db: Session = Depends(get_db)):
 
 
 
-@managerroute.post("/video")
+@managerroute.post("/video/add")
 async def video_upload(req: Request,db: Session = Depends(get_db),file:UploadFile=File(...)):
   filextensions = ['video/mp4', 'video/avi', 'video/mpeg', 'video/3gp']
   if file.content_type in filextensions :
@@ -135,6 +141,24 @@ async def video_upload(req: Request,db: Session = Depends(get_db),file:UploadFil
   else :
       return {"file_name":"video  değil"}
 
+
+
+
+
+
+@managerroute.put("/video/update/{id}/{video_name}")
+async def update_video(req: Request,id:int,video_name:str,db: Session = Depends(get_db)):
+     file_location = f"../Videos/" 
+     video = db.query(Video).filter_by(id=id).first()
+     if video != None:
+        if os.path.isfile( file_location+video_name):
+          print("The file already exists")
+        else:
+         os.rename( file_location+video.video_name,file_location+video_name)
+         db.query(Video).filter_by(id=id).update(dict(video_name=video_name))
+         db.commit()        
+     else :
+        return False    
 
 
 
