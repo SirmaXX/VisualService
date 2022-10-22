@@ -10,7 +10,11 @@ Run mkdir Img
 
 Run mkdir Videos
 
+
 COPY . .
+
+
+
 
 EXPOSE 5001
 

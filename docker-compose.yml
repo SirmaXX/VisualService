@@ -9,7 +9,6 @@ services:
       - "5000:5000"
     
     
-
   api:
     container_name: apii
     image: apii
@@ -18,8 +17,11 @@ services:
       - "5001:5001"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/
     depends_on:
       - db
+      - redis
     
   
   db:
@@ -34,6 +36,28 @@ services:
     #command: -p 5433
     volumes:
       - pgdata:/var/lib/postgresql/data
+  
+  worker:
+    build:
+      context: ./Api
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.celery worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - ./Api
+    depends_on:
+      - api
+      - redis
+
+
+
+
+  redis:
+    image: redis:6-alpine
+
 
 volumes:
   pgdata: {}

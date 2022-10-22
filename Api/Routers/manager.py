@@ -5,17 +5,12 @@ from datetime import datetime,timedelta
 from Lib.models import SessionLocal,İmage,Video
 import json
 import shutil
-import pathlib
 import os
 from typing import List
 
 
-#gün kontrolü için eklediğim tarihler
-Now = datetime.today() 
-Future=datetime.today() + timedelta(days=2)
 
-
-managerroute = APIRouter()
+managerroute = APIRouter(responses={404: {"description": "Not found"}})
 
 # Dependency
 def get_db():

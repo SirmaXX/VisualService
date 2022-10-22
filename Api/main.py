@@ -5,8 +5,8 @@ from Routers.manager import managerroute
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
-import shutil
-import pathlib
+
+
 
 app = FastAPI()
 
