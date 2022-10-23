@@ -1,6 +1,8 @@
 # Visual-Service
-Python flask ile oluşturulmuş proje yönetim uygulaması
-sudo service postgresql stop
+Python flask ile oluşturulmuş Video/Resim yükleme uygulaması 
+
+
+not:sudo service postgresql stop ,çalışan postgresql veritabanlarını kapatalım.(Docker composedanda portu değiştirebilirsiniz.)
 
 ## Api Nasıl çalışır 
 İlk olarak api ve veritabanı servislerini oluşturalım.
@@ -13,55 +15,23 @@ Ardından olarak api ve veritabanı servislerini oluşturalım.
 sudo docker-compose build api
 sudo docker-compose up api
 
-## Web uygulaması nasıl çalışır
-sudo docker-compose build api
-sudo docker-compose up api
+## Apiyi nasıl manuel kullanılır.
+http://0.0.0.0:5001/docs  adresine tıklayınız.
 
-## APİ için çalışan requestler
-### Users (Kullanıcılar için requestler)
------------------------------------------
-```
-curl --location --request GET 'http://0.0.0.0:5001/users/'
+Fastapiye bağlı olarak  swagger ile oluşturulmuş ekran karşınıza çıkacaktır.
+## Apideki dosyalara nasıl erişilir
+Konsoldan "sudo docker exec -t -i api /bin/bash" yazarak erişebilirsiniz.
+## Web(React) uygulaması nasıl çalışır
+sudo docker-compose build webappp
+sudo docker-compose up webappp
 
+# NOT:TAMEMEN YETİŞMEDİ WEB UYGULAMASINI SADECE MİMARİYE DAHİL EDEBİLDİM.
 
-curl --location --request GET 'http://0.0.0.0:5001/users/1'
+## KULLANILAN ARAÇLAR  VE SEBEPLERİ
+1. Fastapi:APİ geliştirme konusunda oldukça yetenekli bir framework.
 
+2. Docker-Compose:Servisleri ayrı ayrı yönetip ölçeklendirmek için düzenlenmiş bir araç
 
-curl --location --request POST 'http://0.0.0.0:5001/users/add' \
---header 'Content-Type: text/plain' \
---data-raw '{
-    "username":"admin",
-    "password":"admin"
-}'
+3. Celery:Asenkron kuyruk düzeni ,örneğin kullanıcı büyük bir dosya yüklediğinde kuyruğa aktarıp diğer işlemleri devam etmek için kullandım.
 
-curl --location --request PUT 'http://0.0.0.0:5001/users/update/1' \
---header 'Content-Type: text/plain' \
---data-raw '{
-    "username":"admin",
-    "password":"admin123"
-}'
-
-
-
-curl --location --request DELETE 'http://0.0.0.0:5001/users/delete/2'
-
-# MİMARİ YAPI
-
-1. Api
-    * Lib  Folder
-        - mail2.py
-        - model.py
-    * Routers Folder
-         - jobs.py
-         - users.py
-    * Dockerfile
-    * main.py
-    * requirements.txt
-3. docker-compose.yml
-
-
-
- 
-
-
-
+4. Redis:celery için kullandığım veritabanıdır.Ayrı veritabanı kullanma sebebim ise broker vb yapıların kayıtları ayrı ,yazılımın veritabanı ayrı kalmasını istediğim için
